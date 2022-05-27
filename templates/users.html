@@ -1,0 +1,79 @@
+{%extends 'base.html'%}
+{% block content%}
+
+<!-- {%for user in users%}
+<h5>{{user.username}}</h5>
+Email : {{user.email}}
+<h7>Posts Liked :</h7>
+{%for post in user.favourite.all%}
+<li>{{post.event_name}}</li>
+{%endfor%}
+{%endfor%} -->
+
+<ol class="list-group list-group-numbered">
+    <h3><i class="fa fa-user-secret" aria-hidden="true"></i> Admins</h3>
+    {%for user in users%}
+    {%if user.is_superuser%}
+    <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">{{user.username}}</div>
+                <b>Email :</b> {{user.email}} <br>
+                <b>Events Added:</b>
+                {%for post in posts%}
+                    {%if post.author == user%}
+                    <ul><a href="{% url 'post-detail' post.id%}">{{post.event_name}}</a></ul>
+                    {%endif%}
+                {%endfor%}
+                </div>
+    </li>
+    {%endif%}
+    {%endfor%}
+    <br>
+
+    <h3><i class="fa fa-user-plus" aria-hidden="true"></i> Organizers</h3>
+    {%for user in users%}
+    {%if user.is_organizer%}
+    <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">{{user.username}}</div>
+                <b>Email :</b> {{user.email}} <br>
+                <b>Events Added:</b><br>
+                {%for post in posts%}
+                    {%if post.author == user%}
+                    <ul><a href="{% url 'post-detail' post.id%}">{{post.event_name}}</a></ul>
+                    {%endif%}
+                {%endfor%}
+                <b>Events Liked:</b>
+                {%for post in user.favourite.all%}
+                    <ul><a href="{% url 'post-detail' post.id%}">{{post.event_name}}</a></ul>
+                {%empty%}
+                    <ul>No Events Liked Yet...</ul>
+                {%endfor%}
+                <a href="{% url 'delete_user' user.username%}" style="text-decoration: none; color:red;"><i class="fa fa-trash" aria-hidden="true"></i>Remove Organizer</a>
+                </div>
+    </li>
+    {%endif%}
+    {%endfor%}
+    <br>
+
+    <h3><i class="fa fa-user" aria-hidden="true"></i> Users</h3>
+    {%for user in users%}
+    {%if user.is_user%}
+    <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">{{user.username}}</div>
+                <b>Email :</b> {{user.email}} <br>
+                <b>Events Liked:</b>
+                {%for post in user.favourite.all%}
+                    <ul><a href="{% url 'post-detail' post.id%}">{{post.event_name}}</a></ul>
+                {%empty%}
+                    <ul>No Events Liked Yet...</ul>
+                {%endfor%}
+                <a href="{% url 'delete_user' user.username%}" style="text-decoration: none; color:red;"><i class="fa fa-trash" aria-hidden="true"></i>Remove User</a>
+                </div>
+    </li>
+    {%endif%}
+    {%endfor%}
+</ol>
+
+{%endblock%}

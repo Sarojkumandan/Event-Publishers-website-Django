@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container"><br>
+<div class="card mb-3 mx-auto" style="max-width: 720px;">
+    <div class="row g-0">
+      <div>
+        {%if post.image_link%}
+          <img src={{object.image_link}} class="card-img-top" alt="...">
+        {%else%}
+          <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8ZXZlbnRzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60" class="card-img-top" alt="...">
+        {%endif%}
+      </div>
+      <div class="col">
+        <div class="card-body">
+          <h3 class="card-title" style="font-family: 'Times New Roman', serif;"><strong>{{object.event_name}}</strong></h3>
+          <p class="card-text">{{object.description}}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Category : </strong>{{object.category}}</li>
+          <li class="list-group-item"><strong>Date of Event : </strong>{{object.event_date}}</li>
+          <li class="list-group-item"><strong>Location : </strong>{{object.location}}</li>
+        </ul>
+      <div class="card-body">
+        {%if user.is_superuser or user == object.author%}
+          <a class="btn btn-secondary" href="{% url 'post-update' object.id %}">Update</a>
+          <a href="{% url 'post-delete' object.id %}" class="btn btn-danger">Delete</a>
+          <a href="/" class="btn btn-primary">Back</a>
+        {%else%}
+          <a class="btn btn-secondary" href={{object.register_link}}>Register</a>
+          <a href="/" class="btn btn-primary">Back</a>
+          {%if is_liked%}
+          <a href="{% url 'favourite_post' object.id%}" class="btn" style="color:red"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a>
+          {%else%}
+          <a href="{% url 'favourite_post' object.id%}" class="btn" style="color:red"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a>
+          {%endif%}
+        {% endif %}
+      </div>
+      </div>
+    </div>
+    <div id='map' style='max-width: 720px; height: 300px;'></div>
+  </div>
+</div>
+
+<script>
+  const detail=[parseFloat("{{object.long}}"),parseFloat("{{object.lang}}")]
+  
+  mapboxgl.accessToken = 'pk.eyJ1IjoiZ2lyaWRoYXJrb2xsaSIsImEiOiJjbDFmNDl1dGkwMHl4M2ptbHdsbTM1NHFrIn0.fpJR-ZcxWfDO5r7b8yqA_A';
+  const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        style: 'mapbox://styles/mapbox/streets-v11', // style URL
+        center: detail, // starting position [lng, lat]
+        zoom: 4 // starting zoom
+  });
+  // Set marker options.
+
+  const marker = new mapboxgl.Marker({
+    color: "green",
+    draggable: true
+  }).setLngLat(detail)
+    .addTo(map);
+</script>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+  <form class="d-flex" action="{% url 'search' %}" method="get">
+    <input class="form-control me-2" name="q" type="text" placeholder="Search events based on place, date, category" aria-label="Search" required>
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
+</div><br>
+
+<div style="display: flex; flex-wrap:wrap; justify-content:space-around;">
+{%for post in posts%}
+
+<div class="card" style="width: 20rem;margin:20px;">
+  <div>
+    {%if post.image_link%}
+        <img src={{post.image_link}} class="card-img-top" alt="..." style="width: 100%;height: 200px;object-fit: cover;">
+  {%else%}
+        <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8ZXZlbnRzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60" class="card-img-top" alt="..." style="width: 100%;height: 200px;object-fit: cover;">
+  {%endif%}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{post.event_name}}</h5>
+    <li class="list-group-item disabled"><i class="fa fa-map-marker"></i> {{post.location}}</li>
+    <li class="list-group-item"><i class="fa fa-calendar"></i> {{post.event_date}}</li>
+  </div>
+  <div class="card-footer">
+    <a href="{% url 'post-detail' post.id%}" class="btn btn-primary">View</a>
+  </div>
+</div>
+
+{%endfor%}
+</div>
+
+{% endblock %}
